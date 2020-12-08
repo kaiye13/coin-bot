@@ -22,8 +22,28 @@ class BotManController
      */
     public function __invoke(): Response
     {
+        $this->botMan->hears('Hello', function ($bot) {
+            $bot->reply('Hello there');
+        });
+
+        $this->botMan->hears('What should we do?', function ($bot) {
+            $bot->reply('Give Corona partiese');
+        });
+
+        $this->botMan->hears('nope', function ($bot) {
+            $bot->reply('ooohhnnn why not? :(');
+        });
+
+        $this->botMan->hears('because we are decent people', function ($bot) {
+            $bot->reply('maybe you are');
+        });
+
+        $this->botMan->hears('my name is {name}', function ($bot, $name) {
+            $bot->reply(sprintf('Hello %s', ucwords($name)));
+        });
+
         $this->botMan->fallback(function (BotMan $bot) {
-            $bot->reply('Sorry, I don\'t understand!');
+            $bot->reply('Wow don\'t say something crazy like that');
         });
 
         $this->botMan->listen();

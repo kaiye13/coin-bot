@@ -13,14 +13,20 @@ class PriceService{
         $this->client = $client;
     }
 
-    public function getPrice(): float{
+    public function getPrice(string $coin): ?string
+    {
+        try{        
+            $response = $this->client->request('GET',sprintf('https://api.coingecko.com/api/v3/coins/%s', $coin));
 
-        $response = $this->client->request('GET','https://api.coingecko.com/api/v3/coins/bitcoin');
+            $content = $response->toArray();
 
-        $content = $response->toArray();
+            $price = $content['market_data']['current_price']['eur'];
+        } catch(\Exception $exception) {
+            return null;
+        }
+        // $formatter = new \NumberFormatter("nl", \NumberFormatter::CURRENCY);
 
-        return $content['market_data']['current_price']['eur'];
-
+        return sprintf('€ %s', $price);
     }
 
 }

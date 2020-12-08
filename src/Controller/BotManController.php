@@ -25,8 +25,15 @@ class BotManController
      */
     public function __invoke(): Response
     {
-        $this->botMan->hears('Give me the bitcoin price',function (BotMan $botMan){
-            $botMan->reply(sprintf('The current price is %s', $this->priceService->getPrice()));
+        $this->botMan->hears('Give me the {coin} price',function (BotMan $botMan, string $coin){
+            $price = $this->priceService->getPrice($coin);
+
+            if (null === $price){
+                $botMan->reply(sprintf('%s is not a known type of coin',$coin));
+            }else {
+                $botMan->reply(sprintf('The current %s price is %s',$coin, $price));
+            }
+            
         });
 
         $this->botMan->fallback(function (BotMan $bot) {
